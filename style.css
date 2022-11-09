@@ -1,0 +1,39 @@
+h1 {
+    text-align: center;
+}
+
+.fov {
+    display: flex;
+    justify-content: center;
+}
+
+.gameboard {
+    display: flex;
+    flex-direction: column;
+    height: 720px;
+    width: 720px;
+  }
+
+.row {
+    display: flex;
+    height: 240px;
+    width: 720px;
+}
+
+.box {
+    height: auto;
+    width: max-content;
+    background-color: #FFFFFF;
+    margin: 1px;
+    flex: 1;
+    border: 1px solid gray;
+    text-align: center;
+}
+
+.gameText {
+    font-size: 196px;
+    font-weight: bold;
+}
+
+
+
