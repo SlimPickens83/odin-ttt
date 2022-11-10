@@ -1,3 +1,5 @@
+// Gameboard module
+
 const board = ( function() {
 	'use strict';
 	return {
@@ -41,3 +43,14 @@ const board = ( function() {
 })();
 
 board.createBoard();
+
+
+// Player objects
+
+const player = (id, name) => {
+   return{id, name};
+}
+
+const playerOne = player(1, "input1");
+const playerTwo = player(2, "input2");
+
