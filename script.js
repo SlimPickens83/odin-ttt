@@ -7,12 +7,14 @@ const player = (id, name, symbol) => {
 const playerOne = player(1, "input1", 'X');
 const playerTwo = player(2, "input2", 'O');
 let livePlayer;
+let turnCount = 1;
 
 
 // Gameboard module
 
 const board = ( function() {
 	'use strict';
+
 	return {
 		createBoard: function() {
 			const gameboard = document.getElementById("gameboard");
@@ -29,28 +31,18 @@ const board = ( function() {
 					const box = document.createElement("div");
                     box.setAttribute('id', indexNum);
 					box.classList.add("box", "gameText");
-					box.addEventListener("click", function(){
-						box.textContent = 'X';
-					});
-
-					row.appendChild(box);
-                    
+					
+					row.appendChild(box);                    
                     boardArray.push(box);
 
-                        console.log(`indexNum: ${indexNum}`);
                     indexNum++;
-                        console.log(`indexNum after increment: ${indexNum}`);
-
-                        console.log(i);
 
                 }
-
-                if (i === 2) {
-                    console.log(boardArray);
-                }
+ 
 			}
 		}
 	};
+
 })();
 
 
@@ -73,25 +65,20 @@ const round = ( function() {
 
     }    
 
-    function _winState (x) {
+    function _findOut (x) {
+        let winningPlayer = false;
+
         if (x.a.textContent === "X" && x.b.textContent === "X" && x.c.textContent === "X") {
-            return true;
+            winningPlayer = livePlayer
         } else if (x.a.textContent === "O" && x.b.textContent === "O" && x.c.textContent === "O") {
-            return true;
+            winningPlayer = livePlayer;
         }
+        
+        return winningPlayer;
+
     }
 
-    function _findOut () {
-        for (i = 0; i < 9; i++) {
-                  won = _winState(winners[i]);
-                  if (won === true) {
-                      console.log(`${winners[i]} is a winner`);
-                  }
-              }
-      }
-
     function _isWinner () {
-        let i;
 
         const winnersObject = (a, b, c) => {
             return {a, b, c};
@@ -109,9 +96,9 @@ const round = ( function() {
         const winners = [one, two, three, four, five, six, seven, eight];
         let won = false;
 
-        for (i = 0; i < 9; i++) {
+        for (let i = 0; i < 9; i++) {
             won = _findOut(winners[i]);
-            if (won === true) {
+            if (won === livePlayer) {
                 break;
             }
         }
@@ -121,43 +108,33 @@ const round = ( function() {
     }
 
     function _boardSpec() {
-        let k;
-        let turn = 0;
-
-        for (k = 1; k <= 9; k++) {
+        for (let k = 1; k <= 9; k++) {
             const box = document.getElementById(k);
-            let result = false;
-            let winningPlayer = "undecided";
 
             box.addEventListener("click", function(){
                 box.textContent = livePlayer.symbol;
-
-                if (turn >= 3) {
-                    result = _isWinner();
-                        console.log(`result: ${result}`);
-                } else if (turn < 3 || result === false) {
-                        console.log(`result: ${result}`);
-                    turn++;
-                    return turn;
-                }
                 
-                if (result === true) {
-                    winningPlayer = livePlayer;
-                        console.log(`winningPlayer: ${winningPlayer}`);
-                    alert(`${winningPlayer} wins!`);
-                    board.createBoard();
+                if (livePlayer = playerOne) {
+                    livePlayer = playerTwo;
+                } else if (livePlayer = playerTwo) {
+                    livePlayer = playerOne;
                 }
+
+                turnCount++;
+
+                round.playerTurn();                
                            
-            });
+            }, { once: true });
         }
     }
 
     return {
         playerTurn: function() {
-            let turnCount = 1;
             let playerSelect = _rollInitiative();
-
-            _boardSpec();
+                console.log(`playerSelect: ${playerSelect}`);
+                console.log(`livePlayer: ${livePlayer}`);
+                console.log(`turnCount: ${turnCount}`);
+            let victor = false;
             
             if (turnCount === 1) {
                 if (playerSelect === 1) {
@@ -165,22 +142,22 @@ const round = ( function() {
                 } else if (playerSelect === 2) {
                     livePlayer = playerTwo;
                 }
-
-                turnCount = _boardSpec();
-
-            } else if (livePlayer === playerOne) {   
-                livePlayer = playerTwo;
-
-                turnCount = _boardSpec();
-
-            } else if (livePlayer === playerTwo) {
-                livePlayer = playerOne;
-
-                turnCount = _boardSpec();
-
             }
+
+            if (turnCount > 3) {
+                victor = _isWinner();
+            }
+
+            if (victor != false) {
+                alert(`${victor} wins!`);
+                board.createBoard();
+            }
+
+            _boardSpec();
+           
         }
     };
+
 })();
 
 
