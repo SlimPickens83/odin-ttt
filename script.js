@@ -4,9 +4,10 @@ const player = (id, name, symbol) => {
     return{id, name, symbol};
  }
  
-const playerOne = player(1, "input1", 'X');
-const playerTwo = player(2, "input2", 'O');
-let livePlayer;
+const playerOne = player("player1", "input1", 'X');
+const playerTwo = player("player2", "input2", 'O');
+let livePlayer = {};
+let playerSelect;
 let turnCount = 1;
 
 
@@ -69,9 +70,9 @@ const round = ( function() {
         let winningPlayer = false;
 
         if (x.a.textContent === "X" && x.b.textContent === "X" && x.c.textContent === "X") {
-            winningPlayer = livePlayer
+            winningPlayer = true;
         } else if (x.a.textContent === "O" && x.b.textContent === "O" && x.c.textContent === "O") {
-            winningPlayer = livePlayer;
+            winningPlayer = true;
         }
         
         return winningPlayer;
@@ -96,7 +97,7 @@ const round = ( function() {
         const winners = [one, two, three, four, five, six, seven, eight];
         let won = false;
 
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 8; i++) {
             won = _findOut(winners[i]);
             if (won === livePlayer) {
                 break;
@@ -107,53 +108,81 @@ const round = ( function() {
 
     }
 
-    function _boardSpec() {
-        for (let k = 1; k <= 9; k++) {
-            const box = document.getElementById(k);
+    function _boxValue (x) {
+        if (x.textContent != 'X' && x.textContent != 'O') {
+            x.textContent = livePlayer.symbol;      
 
-            box.addEventListener("click", function(){
-                box.textContent = livePlayer.symbol;
-                
-                if (livePlayer = playerOne) {
-                    livePlayer = playerTwo;
-                } else if (livePlayer = playerTwo) {
-                    livePlayer = playerOne;
-                }
+            turnCount++;
 
-                turnCount++;
+            round.playerTurn();
+        
+        } else {
+            alert("Invalid move. Please choose a different square.");
 
-                round.playerTurn();                
-                           
-            }, { once: true });
+        }
+
+    }
+
+    function _boardSpec() {        
+
+        for (let l = 1; l <= 9; l++) {
+            const box = document.getElementById(l);
+
+            box.addEventListener("click", function () {
+                _boxValue(box);
+            });
+
         }
     }
 
     return {
         playerTurn: function() {
-            let playerSelect = _rollInitiative();
-                console.log(`playerSelect: ${playerSelect}`);
-                console.log(`livePlayer: ${livePlayer}`);
-                console.log(`turnCount: ${turnCount}`);
             let victor = false;
-            
+
+                console.log(`playerSelect(1): ${playerSelect}`);
+
             if (turnCount === 1) {
+                playerSelect = _rollInitiative();
+            } else if (turnCount > 1) {
                 if (playerSelect === 1) {
-                    livePlayer = playerOne;
+                    playerSelect = 2;
                 } else if (playerSelect === 2) {
-                    livePlayer = playerTwo;
+                    playerSelect = 1;
                 }
             }
+
+            console.log(`playerSelect(2): ${playerSelect}`);
+
+            if (playerSelect === 1) {
+	            livePlayer = playerOne;
+            } else if (playerSelect === 2) {
+	            livePlayer = playerTwo;
+            }      
+
+                console.table(livePlayer);
+
+                console.log(`turnCount: ${turnCount}`);
 
             if (turnCount > 3) {
                 victor = _isWinner();
             }
 
             if (victor != false) {
-                alert(`${victor} wins!`);
+                alert(`${livePlayer} wins!`);
                 board.createBoard();
             }
 
-            _boardSpec();
+            for (let k = 1; k <= 9; k++) {
+                const oldBox = document.getElementById(k);
+                const newBox = oldBox.cloneNode(true);
+
+                if(oldBox.textContent != 'X' && oldBox.textContent != 'O') {
+                    oldBox.parentNode.replaceChild(newBox, oldBox);
+                }
+    
+            }
+
+            _boardSpec();            
            
         }
     };
@@ -162,6 +191,7 @@ const round = ( function() {
 
 
 // Play game
-
-board.createBoard();
-round.playerTurn();
+if (turnCount === 1) {
+    board.createBoard();
+    round.playerTurn();
+}
