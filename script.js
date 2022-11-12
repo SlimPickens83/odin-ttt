@@ -6,8 +6,7 @@ const player = (id, name, symbol) => {
  
 const playerOne = player("player1", "input1", 'X');
 const playerTwo = player("player2", "input2", 'O');
-let playerSelect;
-let turnCount = 1;
+
 
 // Gameboard module
 
@@ -51,6 +50,8 @@ const round = ( function() {
     'use strict';
 
     let livePlayer = {};
+    let playerSelect;
+    let turnCount = 1;
 
     function _rollInitiative () {
         let ini = Math.random()*100;
@@ -135,7 +136,6 @@ const round = ( function() {
 
     return {
         playerTurn: function() {
-            // const gameboard = document.getElementById("gameboard");
             let victor = _isWinner();
             if (turnCount > 3) {
                 console.log(`_isWinner: ${_isWinner()}`);
@@ -188,7 +188,6 @@ const round = ( function() {
 
 
 // Play game
-if (turnCount === 1) {
-    board.createBoard();
-    round.playerTurn();
-}
+
+board.createBoard();
+round.playerTurn();
