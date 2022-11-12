@@ -1,10 +1,28 @@
+body {
+    font-family: courier, monospace;
+}
+
 h1 {
     text-align: center;
+}
+
+.start {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 36px;
+    padding-top: 12px;
+}
+
+#turn {
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 36px;
 }
 
 .fov {
     display: flex;
     justify-content: center;
+    margin-bottom: 72px;
 }
 
 .gameboard {
@@ -41,6 +59,11 @@ h1 {
     text-align: center;
     height: auto;
     width: max-content;
+}
+
+#p1, #p2 {
+   font-size: 24px;
+   font-weight: bold;
 }
 
 
