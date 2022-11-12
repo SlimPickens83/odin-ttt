@@ -6,10 +6,8 @@ const player = (id, name, symbol) => {
  
 const playerOne = player("player1", "input1", 'X');
 const playerTwo = player("player2", "input2", 'O');
-let livePlayer = {};
 let playerSelect;
 let turnCount = 1;
-
 
 // Gameboard module
 
@@ -52,6 +50,8 @@ const board = ( function() {
 const round = ( function() {
     'use strict';
 
+    let livePlayer = {};
+
     function _rollInitiative () {
         let ini = Math.random()*100;
         let roll;
@@ -64,25 +64,16 @@ const round = ( function() {
 
         return roll;
 
-    }    
-
-    function _findOut (x) {
-        let winningPlayer = false;
-
-        if (x.a.textContent === "X" && x.b.textContent === "X" && x.c.textContent === "X") {
-            winningPlayer = true;
-        } else if (x.a.textContent === "O" && x.b.textContent === "O" && x.c.textContent === "O") {
-            winningPlayer = true;
-        }
-        
-        return winningPlayer;
-
     }
 
     function _isWinner () {
+        const winnersObject = (x, y, z) => {
+            const a = document.getElementById(x);
+            const b = document.getElementById(y);
+            const c = document.getElementById(z);
 
-        const winnersObject = (a, b, c) => {
             return {a, b, c};
+
         };
         
         const one = winnersObject(1, 2, 3);
@@ -95,51 +86,61 @@ const round = ( function() {
         const eight = winnersObject(3, 5, 7);
         
         const winners = [one, two, three, four, five, six, seven, eight];
-        let won = false;
 
         for (let i = 0; i < 8; i++) {
-            won = _findOut(winners[i]);
-            if (won === livePlayer) {
-                break;
+            if (winners[i].a.textContent === "X" && winners[i].b.textContent === "X" && winners[i].c.textContent === "X") {
+                return true;
+            } else if (winners[i].a.textContent === "O" && winners[i].b.textContent === "O" && winners[i].c.textContent === "O") {
+                return true;
             }
         }
 
-        return won;
-
     }
 
-    function _boxValue (x) {
-        if (x.textContent != 'X' && x.textContent != 'O') {
+    function _boxValue (x, y) {
             x.textContent = livePlayer.symbol;      
 
-            turnCount++;
-
-            round.playerTurn();
-        
-        } else {
-            alert("Invalid move. Please choose a different square.");
-
-        }
+            if (y === true) {
+                alert("Game over. Please refresh and play again.");
+            } else {    
+                turnCount++;
+                round.playerTurn();
+            }
 
     }
 
-    function _boardSpec() {        
+    function _boardSpec(endGame) {        
 
         for (let l = 1; l <= 9; l++) {
             const box = document.getElementById(l);
 
-            box.addEventListener("click", function () {
-                _boxValue(box);
-            });
+            if (box.textContent != 'X' && box.textContent != '0') {
+                box.addEventListener("click", function () {   
+                        _boxValue(box, endGame);
+                });
+
+            } else {
+                if (endGame === true) {
+                    alert("Game over. Please refresh and play again.");
+                } else {
+                    box.addEventListener("click", function () {
+                        alert("Invalid move. Please select another square.");
+                    });
+                }
+
+            }
 
         }
     }
 
     return {
         playerTurn: function() {
-            let victor = false;
-
-                console.log(`playerSelect(1): ${playerSelect}`);
+            // const gameboard = document.getElementById("gameboard");
+            let victor = _isWinner();
+            if (turnCount > 3) {
+                console.log(`_isWinner: ${_isWinner()}`);
+                console.log(`victor: ${victor}`);
+            }
 
             if (turnCount === 1) {
                 playerSelect = _rollInitiative();
@@ -151,25 +152,21 @@ const round = ( function() {
                 }
             }
 
-            console.log(`playerSelect(2): ${playerSelect}`);
-
             if (playerSelect === 1) {
 	            livePlayer = playerOne;
             } else if (playerSelect === 2) {
 	            livePlayer = playerTwo;
             }      
 
-                console.table(livePlayer);
+            if (victor === true) {
+                alert(`${livePlayer.name} wins!`);
+                alert("Game over. Please refresh and play again.");
 
-                console.log(`turnCount: ${turnCount}`);
-
-            if (turnCount > 3) {
-                victor = _isWinner();
-            }
-
-            if (victor != false) {
-                alert(`${livePlayer} wins!`);
-                board.createBoard();
+                // while (gameboard.firstChild) {
+                //     gameboard.removeChild(gameboard.firstChild);
+                //     }
+            
+                // board.createBoard();
             }
 
             for (let k = 1; k <= 9; k++) {
