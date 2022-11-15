@@ -207,7 +207,10 @@ const round = ( function() {
                     livePlayer = playerOne;
                 }
 
-            }            
+            } else if (turnCount > 9 && victor != true) {
+                alert("Tie. Select 'Start New Game' to play again.");
+
+            }           
 
             if (victor === true) {
                 alert(`${livePlayer.name} wins!`);
