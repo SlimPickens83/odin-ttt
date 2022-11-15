@@ -35,13 +35,14 @@ const board = ( function() {
 	'use strict';
 
     const gameboard = document.getElementById("gameboard");
-    const button = document.getElementById("reset");
 	const boardArray = [];
     const squares = 3;
-    let indexNum = 1;
+    let indexNum;
 
 	return {
 		createBoard: function() {
+            indexNum = 1;
+            
 			for (let i = 0; i < squares; i++) {
 				const row = document.createElement("div");
 				row.classList.add("row");
