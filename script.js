@@ -141,8 +141,14 @@ const round = ( function() {
 
         for (let i = 0; i < 8; i++) {
             if (winners[i].a.textContent === "X" && winners[i].b.textContent === "X" && winners[i].c.textContent === "X") {
+                winners[i].a.classList.add("winStyle");
+                winners[i].b.classList.add("winStyle");
+                winners[i].c.classList.add("winStyle");
                 return true;
             } else if (winners[i].a.textContent === "O" && winners[i].b.textContent === "O" && winners[i].c.textContent === "O") {
+                winners[i].a.classList.add("winStyle");
+                winners[i].b.classList.add("winStyle");
+                winners[i].c.classList.add("winStyle");
                 return true;
             }
         }

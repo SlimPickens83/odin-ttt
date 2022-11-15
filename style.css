@@ -66,5 +66,10 @@ h1 {
    font-weight: bold;
 }
 
+.winStyle {
+    background-color: red;
+    color: white;
+}
+
 
 
