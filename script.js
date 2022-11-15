@@ -37,13 +37,15 @@ const board = ( function() {
     const gameboard = document.getElementById("gameboard");
 	const boardArray = [];
     const squares = 3;
-    let indexNum;
+    let indexNum = 1;
 
 	return {
 		createBoard: function() {
-            indexNum = 1;
-            
 			for (let i = 0; i < squares; i++) {
+                if(indexNum > 9) {
+                    indexNum = 1;
+                }
+                
 				const row = document.createElement("div");
 				row.classList.add("row");
 				gameboard.appendChild(row);
