@@ -1,4 +1,5 @@
-# odin-ttt
+# https://slimpickens83.github.io/odin-ttt/
+
 Odin JS Project
 
 Instructions:
