@@ -42,10 +42,7 @@ const board = ( function() {
 	return {
 		createBoard: function() {
 			for (let i = 0; i < squares; i++) {
-                if(indexNum > 9) {
-                    indexNum = 1;
-                }
-                
+
 				const row = document.createElement("div");
 				row.classList.add("row");
 				gameboard.appendChild(row);
@@ -58,7 +55,11 @@ const board = ( function() {
 					row.appendChild(box);                    
                     boardArray.push(box);
 
-                    indexNum++;
+                    if (indexNum < 9) {
+                        indexNum++;
+                    } else {
+                        indexNum = 1;
+                    }
 
                 }
  
