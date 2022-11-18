@@ -59,6 +59,7 @@ const round = ( function() {
     let turnCount = 1;
     let gameIni = false;
     let gameActive = false;
+    let winningPerson = false;
 
     function _rollInitiative () {
         let ini = Math.random()*100;
@@ -98,7 +99,13 @@ const round = ( function() {
 
             livePlayer = _rollInitiative();
 
-            turn.textContent = `[    ${livePlayer.name} goes first!    ]`;
+            for (let m = 1; m <= 9; m++) {
+                const box = document.getElementById(m);
+                        
+                box.addEventListener("click", function () {  
+                    _boxValue(box);
+                });
+            }
 
             gameIni = true;
             gameActive = true;
@@ -110,6 +117,8 @@ const round = ( function() {
     }
 
     function _isWinner () {
+        let result = false; 
+
         const winnersObject = (x, y, z) => {
             const a = document.getElementById(x);
             const b = document.getElementById(y);
@@ -135,23 +144,28 @@ const round = ( function() {
                 winners[i].a.classList.add("winStyle");
                 winners[i].b.classList.add("winStyle");
                 winners[i].c.classList.add("winStyle");
-                return true;
+                result = true;
+                gameActive = false;
             } else if (winners[i].a.textContent === "O" && winners[i].b.textContent === "O" && winners[i].c.textContent === "O") {
                 winners[i].a.classList.add("winStyle");
                 winners[i].b.classList.add("winStyle");
                 winners[i].c.classList.add("winStyle");
-                return true;
+                result = true;
+                gameActive = false;
             }
+
         }
+
+        return result;
 
     }
 
-    function _boxValue (x, y) {
-        if (y === true) {
-            turn.textContent = "[    Game over. Select 'Start New Game' to play again.    ]";
+    function _boxValue (box) {
+        if (winningPerson === true) {
+            alert("Game Over. Select 'Start New Game' to play again.");
 
-        } else {    
-            x.textContent = livePlayer.symbol; 
+        } else if (turnCount <= 9 && box.textContent != 'X' && box.textContent != 'O') {
+            box.textContent = livePlayer.symbol; 
 
             turnCount++;
 
@@ -161,32 +175,21 @@ const round = ( function() {
                 livePlayer = playerOne;
             }
 
-            round.playerTurn();
+        } else if (turnCount < 9 && (box.textContent === 'X' || box.textContent === 'O')) {
+            turn.textContent = "[    Invalid move. Please select another square.    ]";
+
+        } else if (turnCount === 9 && (box.textContent === 'X' || box.textContent === 'O')) {
+            alert("Game Over. Select 'Start New Game' to play again.");
 
         }
 
-    }
-
-    function _boardSpec(x) {
-        for (let l = 1; l <= 9; l++) {
-            const box = document.getElementById(l);
-            
-            if (x === true) {
-                turn.textContent = `[    ${livePlayer} wins! Select 'Start New Game' to play again.   ]`;
-
-            } else if (box.textContent != 'X' && box.textContent != 'O') {
-                box.addEventListener("click", function () {  
-                        _boxValue(box, x);
-                        turn.textContent = `[    Turn ${turnCount}: ${livePlayer.name}    ]`;
-                });
-
-            } else {
-                box.addEventListener("click", function () {
-                    turn.textContent = "Invalid move. Please select another square.";
-                });
-
-            }
+        if(turnCount > 9) {
+            gameActive = false;
+            turnCount--;
         }
+
+        round.playerTurn();
+
     }
 
     return {
@@ -195,39 +198,29 @@ const round = ( function() {
                 _startGame();
             }
 
-            let victor = _isWinner();
+            winningPerson = _isWinner();
 
-            if (victor === true) {
+            if (winningPerson === true) {
                 if (livePlayer === playerOne) {
                     livePlayer = playerTwo;
                 } else if (livePlayer === playerTwo) {
                     livePlayer = playerOne;
                 }
 
-                turn.textContent = `[    ${livePlayer} wins! Select 'Start New Game' to play again.   ]`;
+                turn.textContent = `[    ${livePlayer.name} wins! Select 'Start New Game' to play again.   ]`;
 
-                alert(`${livePlayer.name} wins!`);
-                alert("Game over. Select 'Start New Game' to play again.");
-                gameActive = false;
+            } else if (gameIni === true && gameActive === false && winningPerson === false) {
 
-            } else if (turnCount > 9) {
-                turn.textContent = "[    Tie. Select 'Start New Game' to play again.    }";
-                gameActive = false;
+                turn.textContent = "[    Tie. Select 'Start New Game' to play again.    ]";
 
-            }
-
-            for (let k = 1; k <= 9; k++) {
-                const oldBox = document.getElementById(k);
-                const newBox = oldBox.cloneNode(true);
-
-                if(oldBox.textContent != 'X' && oldBox.textContent != 'O') {
-                    oldBox.parentNode.replaceChild(newBox, oldBox);
-                }
-    
             }
 
             if (gameActive === true) {
-                _boardSpec(victor);
+                if (turnCount === 1) {
+                    turn.textContent = `[    ${livePlayer.name} goes first!    ]`;
+                } else {
+                    turn.textContent = `[    Turn ${turnCount}: ${livePlayer.name}    ]`;
+                }
 
             }              
            
